@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>TimeLine</title>
+    <link rel="shortcut icon" href="/static/img/favicon.ico">
+    <link href="https://cdn.bootcss.com/bootstrap/4.1.1/css/bootstrap.css" rel="stylesheet">
+    <link href="https://cdn.bootcss.com/font-awesome/4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/static/css/jquery.toast.css">
+    <link rel="stylesheet" href="/static/css/base.css">
+    <link rel="stylesheet" href="/static/css/timeline.css">
+</head>
+<body>
+
+<div class="container">
+    <nav class="navbar navbar-expand-lg navbar-light t-card t-shadow-2dp">
+        <a class="navbar-brand" href="/timeline">TimeLine</a>
+        <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent"
+                aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+
+        <div class="collapse navbar-collapse" id="navbarSupportedContent">
+            <ul class="navbar-nav mr-auto" th:if="${user==null}">
+                <li class="nav-item">
+                    <span class="nav-link" data-toggle="modal" data-target="#loginModal">登录</span>
+                </li>
+                <li class="nav-item">
+                    <span class="nav-link" data-toggle="modal" data-target="#registerModal">注册</span>
+                </li>
+            </ul>
+            <ul class="navbar-nav mr-auto" th:unless="${user==null}">
+                <li class="nav-item dropdown">
+                    <span class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false" th:text="${user.username}"></span>
+                    <div class="dropdown-menu" aria-labelledby="navbarDropdown">
+                        <a class="dropdown-item" href="/logout">退出</a>
+                        <!--<div class="dropdown-divider"></div>-->
+                    </div>
+                </li>
+                <li class="nav-item">
+                    <span class="nav-link" id="btn-add">add</span>
+                </li>
+            </ul>
+            <form class="form-group my-2 my-lg-0" id="searchForm" onsubmit="return search()">
+                <input class="form-control t-search mr-sm-2" type="search" placeholder="Search" autocomplete="off" aria-label="Search" id="searchInput">
+                <i class="fa fa-search" id="btn-search" onclick="search()"></i>
+            </form>
+        </div>
+    </nav>
+    <div class="row" id="add-area" style="display:none;">
+        <fieldset class="t-fieldset t-card t-shadow-2dp">
+            <legend class="t-legend">记录一下</legend>
+            <form id="addForm" class="">
+                <div class="form-group">
+                    <textarea name="content" id="addContent" cols="30" rows="10" class="form-control"></textarea>
+                </div>
+                <div class="form-row">
+                    <div class="col-sm-6 col-sm-offset-1 col-md-7">
+                        <select class="form-control md-select" name="isMd">
+                            <option value=1>使用Markdown语法</option>
+                            <option value=0>不使用Markdown语法</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-5 col-md-5">
+                        <button type="submit" class="btn btn-primary float-right" id="btnAdd">提交</button>
+                    </div>
+                </div>
+            </form>
+        </fieldset>
+    </div>
+    <div class="row">
+        <fieldset class="t-fieldset t-card t-shadow-2dp">
+            <legend class="t-legend">时间线</legend>
+            <ul class="t-timeline" id="main-timeline">
+            </ul>
+        </fieldset>
+    </div>
+</div>
+<div class="modal fade" id="loginModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">登录</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="loginForm">
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="inputUserName" class="col-sm-3 col-form-label">用户名</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" id="inputUserName" autocomplete="off" name="username">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword" class="col-sm-3 col-form-label">密码</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" id="inputPassword" autocomplete="off" name="password">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button class="btn btn-primary" type="submit" id="btnLogin">登录</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<div class="modal fade" id="registerModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">注册</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <form id="registerForm">
+                <div class="modal-body">
+                    <div class="form-group row">
+                        <label for="inputUserName2" class="col-sm-3 col-form-label">用户名</label>
+                        <div class="col-sm-9">
+                            <input type="text" class="form-control" autocomplete="off" id="inputUserName2" name="username">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword2" class="col-sm-3 col-form-label">密码</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" autocomplete="off" id="inputPassword2" name="password">
+                        </div>
+                    </div>
+                    <div class="form-group row">
+                        <label for="inputPassword3" class="col-sm-3 col-form-label">确认密码</label>
+                        <div class="col-sm-9">
+                            <input type="password" class="form-control" autocomplete="off" id="inputPassword3" name="repassword">
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-default" data-dismiss="modal">取消</button>
+                    <button class="btn btn-primary" type="submit" id="btnRegister">注册</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+
+<script src="/static/js/jquery.mini.js"></script>
+<script src="/static/js/jquery.toast.js"></script>
+<script src="/static/js/bootstrap.min.js"></script>
+<script src="/static/js/dayjs.min.js"></script>
+<script src="/static/js/marked.min.js"></script>
+<script src="/static/js/timeline.js"></script>
+<script>
+    let is_addarea_show = false;
+    let cur_page = 0;
+    let max_page = 2;
+
+    $(function () {
+        register();
+        login();
+        addAreaSwitch();
+        addContent();
+        loadTimeLine();
+        search();
+        steamLoad();
+    });
+</script>
+</body>
+</html>
