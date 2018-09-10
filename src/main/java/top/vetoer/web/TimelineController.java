@@ -57,10 +57,19 @@ public class TimelineController extends BaseController{
     @LoggerManage(description = "首页流加载数据")
     public ResponseData steamLoad(@RequestParam(value = "page", defaultValue = "0") Integer page,
                                   @RequestParam(value = "size", defaultValue = "15") Integer size){
-        Sort sort = new Sort(Sort.Direction.DESC,"createTime");
-        Pageable pageable = PageRequest.of(page,size,sort);
-        Page<Timeline> pages = timeLineRepository.findAll(pageable);
-        return new ResponseData(pages);
+        try {
+            if(getSession().getAttribute(Const.LOGIN_SESSION_KEY)==null){
+                return new ResponseData(ExceptionMsg.NeedLogin);
+            }
+            long userId = super.getUser().getId();
+            Sort sort = new Sort(Sort.Direction.DESC,"createTime");
+            Pageable pageable = PageRequest.of(page,size,sort);
+            Page<Timeline> pages = timeLineRepository.findAllByUserId(userId,pageable);
+            return new ResponseData(pages);
+        } catch (Exception e) {
+            logger.error(e.toString());
+        }
+        return new ResponseData(ExceptionMsg.FAILED);
     }
 
     @GetMapping(value = "/query")

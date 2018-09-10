@@ -119,7 +119,7 @@ function appendData(items,isAppend=true){
         if(item.isMd=="1"){
             content = marked(item.content);
         }else{
-            content = item.content;
+            content = "<pre>"+item.content+"</pre>";
         }
         block += '<li class="t-timeline-item"><i class="t-timeline-axis"></i>';
         block += '<div class="t-timeline-content t-text"><h3 class="t-timeline-title">'+month+'<span class="t-timeline-time">'+time+'</span></h3>';
