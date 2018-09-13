@@ -1,4 +1,5 @@
 /target/
+/output/
 !.mvn/wrapper/maven-wrapper.jar
 
 # Compiled class file
@@ -41,3 +42,5 @@ hs_err_pid*
 *.ipr
 .mvn
 mvnw*
+
+output

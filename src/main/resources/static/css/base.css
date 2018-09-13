@@ -2,9 +2,6 @@ body{
     background-color: #f5f5f5;
 }
 
-li{
-    list-style:none;
-}
 
 .t-card{
     /*display: -webkit-box;*/
@@ -36,14 +33,14 @@ li{
     color: #666;
 }
 
-.t-text h3 {
-    font-size: 18px;
-}
+/*.t-text h3 {*/
+    /*font-size: 18px;*/
+/*}*/
 
-.t-text h1, .t-text h2, .t-text h3 {
-    font-weight: 500;
-    color: #333;
-}
+/*.t-text h1, .t-text h2, .t-text h3 {*/
+    /*font-weight: 500;*/
+    /*color: #333;*/
+/*}*/
 .t-text-gray{
     color:rgba(0,0,0,.5);
 }
@@ -79,6 +76,7 @@ li{
 .t-timeline-item {
     position: relative;
     padding-bottom: 20px;
+    list-style:none;
 }
 .t-timeline-item:before,hr{
     background-color: #e6e6e6;
@@ -125,6 +123,9 @@ li{
 .t-timeline-title {
     position: relative;
     margin-bottom: 10px;
+    font-size: 18px;
+    font-weight: 500;
+    color: #333;
 }
 .t-timeline-time{
     font-size:14px;

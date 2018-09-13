@@ -62,11 +62,15 @@
                             <option value=0>不使用Markdown语法</option>
                         </select>
                     </div>
-                    <div class="col-sm-5 col-md-5">
-                        <button type="submit" class="btn btn-primary float-right" id="btnAdd">提交</button>
+                    <div class="col-sm-5 col-md-5" style="text-align: right;">
+                        <button class="btn" id="preview">预览</button>
+                        <button type="submit" class="btn btn-primary" id="btnAdd">提交</button>
                     </div>
                 </div>
             </form>
+            <section>
+                <div id="preview-md"></div>
+            </section>
         </fieldset>
     </div>
     <div class="row">
@@ -156,6 +160,7 @@
     let is_addarea_show = false;
     let cur_page = 0;
     let max_page = 2;
+    let nextpage_tip = true;
 
     $(function () {
         register();
@@ -165,6 +170,7 @@
         loadTimeLine();
         search();
         steamLoad();
+        previewMd();
     });
 </script>
 </body>
